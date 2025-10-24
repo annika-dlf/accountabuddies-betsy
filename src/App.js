@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Charac from "./Components/Charac";
+import WelcomeHeader from "./Components/WelcomeHeader";
+import TimeSelector from "./Components/TimeSelector";
+import StartButton from "./Components/StartButton";
+import Screen from "./Components/Screen";
 
 function App() {
+  const [activeTime, setActiveTime] = useState(null);
+  const navigate = useNavigate();
+  const times = [20, 40, 60];
+
+  const handleStart = () => {
+    if (activeTime) {
+      navigate("/timer", { state: { activeTime } });
+    } else {
+      alert("Please select a time first!");
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Screen>
+      <Charac />
+      <div className="Container">
+        <div className="MainWrapper">
+          <WelcomeHeader />
+          <TimeSelector
+            times={times}
+            activeTime={activeTime}
+            setActiveTime={setActiveTime}
+          />
+        </div>
+        <StartButton activeTime={activeTime} onClick={handleStart} />
+      </div>
+    </Screen>
   );
 }
 
