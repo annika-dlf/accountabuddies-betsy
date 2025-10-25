@@ -13,7 +13,7 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/timer" element={<Timer />} />
       <Route path="/failed" element={<Failed />} />
-      <Route path="/success" element={<Success />} />    
+      <Route path="/success" element={<Success />} />
     </Routes>
   </BrowserRouter>
 );
