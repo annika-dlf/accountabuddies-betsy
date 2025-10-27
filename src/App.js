@@ -21,6 +21,7 @@ function App() {
   };
 
   return (
+  <body className="default">
     <Screen>
       <Charac />
       <div className="Container">
@@ -35,6 +36,7 @@ function App() {
         <StartButton activeTime={activeTime} onClick={handleStart} />
       </div>
     </Screen>
+  </body>
   );
 }
 

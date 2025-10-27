@@ -72,6 +72,7 @@ const handleSlideComplete = () => {
 };
 
   return (
+  <body className="default">
     <Screen>
       <Charac />
       <div className="Container">
@@ -79,6 +80,7 @@ const handleSlideComplete = () => {
         <SlideToExit onSlideComplete={handleSlideComplete} />
       </div>
     </Screen>
+  </body>
   );
 }
 

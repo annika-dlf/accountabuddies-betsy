@@ -66,31 +66,36 @@ small {
 }
 
 /* SCREEN DIV CLASSES */
-
 .Screen {
   padding: 56px 20px;
   display: flex;
   width: 353px;
-  height: 740px;
+  height: 85vh;
   flex-direction: column;
   justify-content: end;
   align-items: center;
-  background-size: 393px 852px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: center;     /* vertical center */
+  background-size: cover;      /* fills viewport while keeping aspect ratio */
   background-repeat: no-repeat;
+  background-position: center;
 }
 
-/* Default (used by App + Timer) */
-.screen_default-green {
-  background-image: url(../public/mobile_default-yellow.png);
+.default{
+  background-image: url('../public/mobile_default-yellow.png');
 }
 
-/* Success screen */
-.screen_success-green {
+.success {
   background-image: url(../public/mobile_success-yellow.png);
 }
 
-/* Failed screen */
-.screen_failed {
+.failed {
   background-image: url(../public/mobile_failed.png);
 }
 
