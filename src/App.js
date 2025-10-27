@@ -10,8 +10,7 @@ import Screen from "./Components/Screen";
 function App() {
   const [activeTime, setActiveTime] = useState(null);
   const navigate = useNavigate();
-  // const times = [20, 40, 60];
-  const times = [1, 2, 3];
+  const times = [20, 40, 60];
 
   const handleStart = () => {
     if (activeTime) {
