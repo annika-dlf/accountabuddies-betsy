@@ -5,14 +5,14 @@ import App from "./App";
 import Timer from "./Pages/Timer";
 import Failed from "./Pages/Failed";
 import Success from "./Pages/Success";// index.js or Screen.js (top-level component)
-function setViewportHeight() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
+function setViewportWidth() {
+  const vw = window.innerWidth * 0.01;
+  document.documentElement.style.setProperty('--vw', `${vw}px`);
 }
 
-window.addEventListener('resize', setViewportHeight);
-window.addEventListener('orientationchange', setViewportHeight);
-setViewportHeight();
+window.addEventListener('resize', setViewportWidth);
+window.addEventListener('orientationchange', setViewportWidth);
+setViewportWidth();
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
