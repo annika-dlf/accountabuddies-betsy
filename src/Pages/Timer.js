@@ -12,18 +12,52 @@ function Timer() {
   const navigate = useNavigate();
 
   const { activeTime, resumeTime } = location.state || { activeTime: 0, resumeTime: null };
-
-  // If resuming, use resumeTime; otherwise, full activeTime
   const [secondsLeft, setSecondsLeft] = useState(resumeTime ?? activeTime * 60);
+  const [wakeLock, setWakeLock] = useState(null);
 
-  // Countdown logic
+  // ✅ Keep screen awake while on Timer page
+  useEffect(() => {
+    let lock = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ("wakeLock" in navigator) {
+          lock = await navigator.wakeLock.request("screen");
+          setWakeLock(lock);
+          console.log("✅ Screen wake lock active");
+        } else {
+          console.warn("⚠️ Wake Lock API not supported in this browser.");
+        }
+      } catch (err) {
+        console.error("WakeLock Error:", err.name, err.message);
+      }
+    };
+
+    requestWakeLock();
+
+    // Reacquire wake lock if page/tab becomes visible again
+    const handleVisibilityChange = () => {
+      if (wakeLock !== null && document.visibilityState === "visible") {
+        requestWakeLock();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (lock) {
+        lock.release().then(() => console.log("🔒 Screen wake lock released"));
+      }
+    };
+  }, [wakeLock]);
+
+  // ✅ Countdown logic
   useEffect(() => {
     if (secondsLeft <= 0) {
-      // Timer finished successfully
       const minutesLeft = 0;
       const qpiChange = calculateQPIChange(activeTime * 60, 0);
 
-      // Clear saved time
       localStorage.removeItem("remainingTime");
       localStorage.removeItem("activeTime");
 
@@ -40,50 +74,43 @@ function Timer() {
     return () => clearInterval(timer);
   }, [secondsLeft, activeTime, navigate]);
 
-  // Format mm:ss
+  // ✅ Format mm:ss
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
   const formattedTime = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
-  // Handle user sliding to fail
-const handleSlideComplete = () => {
-  // Save current progress before leaving
-  localStorage.setItem("remainingTime", secondsLeft);
-  localStorage.setItem("activeTime", activeTime);
+  // ✅ Handle slide to exit
+  const handleSlideComplete = () => {
+    localStorage.setItem("remainingTime", secondsLeft);
+    localStorage.setItem("activeTime", activeTime);
 
-  const totalSeconds = activeTime * 60;
-  const qpiChange = calculateQPIChange(totalSeconds, secondsLeft);
+    const totalSeconds = activeTime * 60;
+    const qpiChange = calculateQPIChange(totalSeconds, secondsLeft);
+    const timeSpent = totalSeconds - secondsLeft;
+    const halfwayPoint = totalSeconds / 2;
 
-  // Calculate how much time they actually spent
-  const timeSpent = totalSeconds - secondsLeft;
-  const halfwayPoint = totalSeconds / 2;
-
-  if (timeSpent > halfwayPoint + 60) {
-    // ✅ User completed over half — go to Success screen
-    navigate("/success", {
-      state: { qpiChange, selectedMinutes: activeTime, minutesLeft: minutes },
-    });
-  } else {
-    // ❌ User didn't complete half — go to Failed screen
-    navigate("/failed", {
-      state: { qpiChange, selectedMinutes: activeTime, minutesLeft: minutes },
-    });
-  }
-};
+    if (timeSpent > halfwayPoint + 60) {
+      navigate("/success", {
+        state: { qpiChange, selectedMinutes: activeTime, minutesLeft: minutes },
+      });
+    } else {
+      navigate("/failed", {
+        state: { qpiChange, selectedMinutes: activeTime, minutesLeft: minutes },
+      });
+    }
+  };
 
   return (
-  <body className="default">
-    <Screen>
-      <Charac />
-      <div className="Container">
-        <TimerDisplay formattedTime={formattedTime} />
-        <SlideToExit onSlideComplete={handleSlideComplete} />
-      </div>
-    </Screen>
-  </body>
+      <body className="default">
+      <Screen>
+        <Charac />
+        <div className="Container">
+          <TimerDisplay formattedTime={formattedTime} />
+          <SlideToExit onSlideComplete={handleSlideComplete} />
+        </div>
+      </Screen>
+      </body>
   );
 }
 
 export default Timer;
-
-
