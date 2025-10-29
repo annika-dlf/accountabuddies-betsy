@@ -74,6 +74,7 @@ small {
   flex-direction: column;
   justify-content: end;
   align-items: center;
+  scale: 0.95;
 }
 
 body {
