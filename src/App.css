@@ -72,7 +72,7 @@ small {
   width: 353px;
   height: 85vh;
   flex-direction: column;
-  justify-content: end;
+  /* justify-content: end; */
   align-items: center;
   scale: 0.95;
 }
