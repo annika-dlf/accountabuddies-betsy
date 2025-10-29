@@ -4,7 +4,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import Timer from "./Pages/Timer";
 import Failed from "./Pages/Failed";
-import Success from "./Pages/Success";
+import Success from "./Pages/Success";// index.js or Screen.js (top-level component)
+function setViewportHeight() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+setViewportHeight();
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
